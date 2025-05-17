@@ -1,0 +1,58 @@
+@media (max-width: 768px) {
+    body {
+    padding: 8px;
+    min-height: 100vh;
+    height: 100vh;
+    overflow-y: hidden;
+    display: flex;
+  }
+
+  .header h1 {
+    font-size: 1.8rem !important;
+    margin-bottom: 2px !important;
+  }
+
+  .header p {
+    font-size: 0.9rem !important;
+  }
+
+  .cube-image {
+    width: 80px !important;
+    height: 80px !important;
+    margin: 8px auto !important;
+  }
+
+  .timer-display {
+    font-size: 3.5rem !important;
+    margin: 8px 0 !important;
+  }
+
+  .message {
+    font-size: 1rem !important;
+    margin-bottom: 8px !important;
+  }
+
+  .scramble-text {
+    padding: 10px !important;
+    font-size: 0.8rem !important;
+    margin-bottom: 12px !important;
+  }
+
+  .btn {
+    padding: 10px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .stats-card {
+    padding: 10px !important;
+  }
+
+  .stats-value {
+    font-size: 1.2rem !important;
+  }
+
+  .footer {
+    font-size: 0.7rem !important;
+  }
+}
+
