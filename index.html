@@ -7,7 +7,7 @@
     <title>Crono-CUBE | Timer para Cubo Mágico</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link id="theme-style" rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/mobile.css">
     <link rel="shortcut icon" type="image/ico" href="assets/icon/16_cube-icon.icon">
     <link rel="shortcut icon" type="image/ico" href="assets/icon/32_cube-icon.ico">
@@ -17,7 +17,7 @@
 
 <body>
     <div class="header">
-        <h1>Crono-CUBE</h1>
+        <img src="assets/img/crono-cube-font.png" alt="Crono-CUBE" class="logo-title">
         <p>Timer para Cubo Mágico</p>
     </div>
 
@@ -70,8 +70,8 @@
     </div>
 
     <div class="footer">
-        <p>Crono-CUBE © 2025 | Desenvolvido por <a href="https://github.com/AllvesMatteus"
-                style="color: #e74c3c;text-decoration: none;">AllvesMatteus</a></p>
+        <p>Crono-CUBE © 2025 | Desenvolvido por <a href="https://github.com/AllvesMatteus/Crono-CUBE">AllvesMatteus</a>
+        </p>
     </div>
 
     <!-- Modal de Histórico -->
@@ -111,28 +111,10 @@
 
             <div class="settings-group">
                 <label class="settings-label">Tema</label>
-                <select class="settings-select">
-                    <option>Escuro</option>
-                    <option>Claro</option>
-                    <option>High Contrast</option>
+                <select class="settings-select" id="theme-selector">
+                    <option value="dark">Escuro</option>
+                    <option value="light">Claro</option>
                 </select>
-
-                <label class="settings-label">Formato do Timer</label>
-                <select class="settings-select" id="timer-format">
-                    <option value="mm:ss.ms">MM:SS.MS</option>
-                    <option value="ss.ms">SS.MS</option>
-                    <option value="s.ms">S.MS</option>
-                </select>
-
-                <div class="settings-checkbox">
-                    <input type="checkbox" id="inspection-time">
-                    <label for="inspection-time">Tempo de inspeção (15s)</label>
-                </div>
-
-                <div class="settings-checkbox">
-                    <input type="checkbox" id="keyboard-control" checked>
-                    <label for="keyboard-control">Controle por teclado</label>
-                </div>
             </div>
 
             <button class="btn btn-primary" id="btnSaveSettings" style="width: 100%;">

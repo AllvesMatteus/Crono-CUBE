@@ -1,5 +1,5 @@
 @media (max-width: 768px) {
-    body {
+  body {
     padding: 8px;
     min-height: 100vh;
     height: 100vh;
@@ -7,8 +7,9 @@
     display: flex;
   }
 
-  .header h1 {
-    font-size: 1.8rem !important;
+  .logo-title {
+    height: 2rem !important;
+    /* Ajuste para mobile */
     margin-bottom: 2px !important;
   }
 
@@ -51,8 +52,22 @@
     font-size: 1.2rem !important;
   }
 
+  .modal-content {
+    width: 95vw;
+    padding: 10px;
+  }
+
+  .history-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .history-time {
+    font-size: 1.1rem;
+    margin: 5px 0;
+  }
+
   .footer {
     font-size: 0.7rem !important;
   }
 }
-

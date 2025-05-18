@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const avg10Display = document.getElementById('avg10');
     const totalSolvesDisplay = document.getElementById('total-solves');
 
-    // Elementos dos modais
     const btnHistory = document.getElementById('btnHistory');
     const historyModal = document.getElementById('history-modal');
     const closeHistory = document.getElementById('close-history');
@@ -23,24 +22,20 @@ document.addEventListener('DOMContentLoaded', function () {
     const closeSettings = document.getElementById('close-settings');
     const btnSaveSettings = document.getElementById('btnSaveSettings');
 
-    // Variáveis do timer
+    // VARIÁVEIS DO TIMER
     let startTime;
     let elapsedTime = 0;
     let timerInterval;
     let isRunning = false;
     let isPaused = false;
-    let isInspection = false;
-    let inspectionInterval;
-    let inspectionTime = 15;
     let lastStartTime = 0;
 
-    // Histórico e estatísticas
+    // ESTATÍSTICAS
     let solvesHistory = [];
     let bestTime = null;
     let lastTime = null;
     let ao10 = null;
 
-    // Gera um scramble aleatório
     function generateScramble() {
         const moves = ["U", "U'", "U2", "D", "D'", "D2",
             "L", "L'", "L2", "R", "R'", "R2",
@@ -62,76 +57,73 @@ document.addEventListener('DOMContentLoaded', function () {
         return scramble.join(" ");
     }
 
-    // Atualiza o scramble na tela
     function updateScramble() {
         scrambleDisplay.textContent = generateScramble();
     }
 
-    // Formata o tempo para exibição
-    function formatTime(ms, format = "mm:ss.ms") {
+    // FORMATO DO TEMPO (formato fixo MM:SS.MS)
+    function formatTime(ms) {
         let date = new Date(ms);
         let minutes = date.getUTCMinutes().toString().padStart(2, '0');
         let seconds = date.getUTCSeconds().toString().padStart(2, '0');
         let centiseconds = Math.floor(date.getUTCMilliseconds() / 10).toString().padStart(2, '0');
-
-        if (format === "ss.ms") {
-            let totalSeconds = (ms / 1000).toFixed(2);
-            return totalSeconds.padStart(5, '0');
-        } else if (format === "s.ms") {
-            let totalSeconds = (ms / 1000).toFixed(2);
-            return totalSeconds;
-        }
-
         return `${minutes}:${seconds}.${centiseconds}`;
     }
 
-    // Atualiza o display do timer
     function updateTimer() {
         const currentTime = Date.now();
         elapsedTime = currentTime - startTime;
         timerDisplay.textContent = formatTime(elapsedTime);
     }
 
-    // Inicia o tempo de inspeção
-    function startInspection() {
-        isInspection = true;
-        inspectionTime = 15;
-        messageDisplay.textContent = `Inspeção: ${inspectionTime}s`;
-
-        inspectionInterval = setInterval(() => {
-            inspectionTime--;
-            messageDisplay.textContent = `Inspeção: ${inspectionTime}s`;
-
-            if (inspectionTime <= 0) {
-                clearInterval(inspectionInterval);
-                messageDisplay.textContent = "00! Comece a resolver!";
-                setTimeout(() => {
-                    startTimer();
-                }, 500);
-            }
-        }, 1000);
-    }
-
-    // Inicia o timer
+    // INICIA O TIMER
     function startTimer() {
         if (!isRunning) {
-            startTime = Date.now() - elapsedTime;
-            timerInterval = setInterval(updateTimer, 10);
-            isRunning = true;
-            isPaused = false;
-            isInspection = false;
-            lastStartTime = Date.now();
+            let countdown = 3;
+            messageDisplay.textContent = countdown;
 
-            // Esconde os botões
-            btnContainer.innerHTML = '';
-            messageDisplay.textContent = 'Resolvendo...';
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                messageDisplay.textContent = countdown;
 
-            // Adiciona eventos de teclado e toque para parar
-            document.addEventListener('keydown', stopTimerOnSpace);
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    messageDisplay.textContent = 'JÁ!!';
+                    messageDisplay.style.color = '#10B981';
+
+                    setTimeout(() => {
+                        messageDisplay.style.fontSize = '';
+                        messageDisplay.style.color = '';
+
+                        startTime = Date.now() - elapsedTime;
+                        timerInterval = setInterval(updateTimer, 10);
+                        isRunning = true;
+                        isPaused = false;
+                        lastStartTime = Date.now();
+
+                        btnContainer.innerHTML = '';
+                        messageDisplay.textContent = 'Resolvendo...';
+
+                        //Mensagem de instrução
+                        const instruction = document.createElement('div');
+                        instruction.className = 'instruction-message show';
+                        instruction.textContent = 'Toque em qualquer lugar para pausar';
+                        document.body.appendChild(instruction);
+
+                        setTimeout(() => {
+                            instruction.classList.remove('show');
+                            setTimeout(() => {
+                                document.body.removeChild(instruction);
+                            }, 300);
+                        }, 5000);
+
+                        document.addEventListener('keydown', stopTimerOnSpace);
+                    }, 200);
+                }
+            }, 1000);
         }
     }
 
-    // Para o timer quando a barra de espaço é pressionada
     function stopTimerOnSpace(e) {
         if (e.code === 'Space' && isRunning) {
             e.preventDefault();
@@ -139,21 +131,24 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Handler para pausar via toque/clique
     function handlePause(e) {
-        if (isRunning && !e.target.closest('.btn') && !isInspection && Date.now() - lastStartTime > 300) {
+        if (isRunning && !e.target.closest('.btn') && Date.now() - lastStartTime > 300) {
             e.preventDefault();
             stopTimer();
         }
     }
 
-    // Para o timer
+    // PARAR O TIMER
     function stopTimer() {
         if (isRunning) {
             clearInterval(timerInterval);
             isRunning = false;
 
-            // Mostra os botões de ação
+            const existingInstruction = document.querySelector('.instruction-message');
+            if (existingInstruction) {
+                document.body.removeChild(existingInstruction);
+            }
+
             btnContainer.innerHTML = `
                 <div class="btn-group">
                     <button class="btn btn-primary" id="btnFinish">
@@ -168,7 +163,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 </button>
             `;
 
-            // Configura os eventos dos botões
             document.getElementById('btnFinish').addEventListener('click', function () {
                 saveTime(elapsedTime);
                 updateScramble();
@@ -188,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Reseta o timer
+    // RESET O TIMER
     function resetTimer() {
         elapsedTime = 0;
         timerDisplay.textContent = formatTime(elapsedTime);
@@ -206,19 +200,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         messageDisplay.textContent = 'Pressione em COMEÇAR para iniciar';
 
-        // Reativa os listeners dos botões
-        document.getElementById('btnStart').addEventListener('click', function () {
-            if (document.getElementById('inspection-time').checked) {
-                startInspection();
-            } else {
-                startTimer();
-            }
-        });
-
+        document.getElementById('btnStart').addEventListener('click', startTimer);
         document.getElementById('btnScramble').addEventListener('click', updateScramble);
     }
 
-    // Salva um tempo no histórico
+    // SALVA O TEMPO NO HISTÓRICO
     function saveTime(time) {
         const solve = {
             time: time,
@@ -231,19 +217,16 @@ document.addEventListener('DOMContentLoaded', function () {
         updateStats();
         updateHistoryList();
 
-        // Salva no localStorage
         localStorage.setItem('solvesHistory', JSON.stringify(solvesHistory));
     }
 
-    // Atualiza as estatísticas
+    // ATUALIZA AS ESTATÍSTICAS
     function updateStats() {
         if (solvesHistory.length === 0) return;
 
-        // Melhor tempo
         bestTime = Math.min(...solvesHistory.map(s => s.time));
         bestTimeDisplay.textContent = formatTime(bestTime);
 
-        // Último tempo
         lastTimeDisplay.textContent = formatTime(lastTime);
 
         // Média de 10
@@ -258,11 +241,10 @@ document.addEventListener('DOMContentLoaded', function () {
             avg10Display.textContent = "--:--.--";
         }
 
-        // Total de solves
         totalSolvesDisplay.textContent = solvesHistory.length;
     }
 
-    // Atualiza a lista de histórico
+    // ATUALIZA A LISTA DO HISTÓRICO
     function updateHistoryList() {
         if (solvesHistory.length === 0) {
             historyList.innerHTML = '<div style="text-align: center; padding: 40px 0; color: #95a5a6;">Nenhum tempo registrado ainda</div>';
@@ -278,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function () {
         `).join('');
     }
 
-    // Limpa o histórico
+    // LIMPA O HISTÓRICO
     function clearHistory() {
         solvesHistory = [];
         bestTime = null;
@@ -293,7 +275,8 @@ document.addEventListener('DOMContentLoaded', function () {
         updateHistoryList();
         localStorage.removeItem('solvesHistory');
     }
-
+    
+    // SALVA O HISTÓRICO COMO PNG
     function saveAsPNG() {
         // 1. Garante que o modal está visível
         historyModal.classList.add('active');
@@ -312,7 +295,7 @@ document.addEventListener('DOMContentLoaded', function () {
         html2canvas(clone.querySelector('.modal-content'), {
             scale: 2,
             backgroundColor: '#1a1a2e',
-            logging: true, // Habilita logs para debug
+            logging: true,
             useCORS: true,
             allowTaint: true,
             scrollX: 0,
@@ -333,7 +316,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Carrega o histórico do localStorage
     function loadHistory() {
         const savedHistory = localStorage.getItem('solvesHistory');
         if (savedHistory) {
@@ -345,38 +327,26 @@ document.addEventListener('DOMContentLoaded', function () {
             updateHistoryList();
         }
     }
-
-    // Event Listeners
-    btnStart.addEventListener('click', function () {
-        if (document.getElementById('inspection-time').checked) {
-            startInspection();
-        } else {
-            startTimer();
-        }
-    });
-
+    // EVENTOS DE CLIQUE PARA INICIAR O TIMER
+    btnStart.addEventListener('click', startTimer);
     btnScramble.addEventListener('click', updateScramble);
 
-    // Eventos de toque/clique para pausar
+    // EVENTOS DE TOQUE E CLIQUE PARA PAUSAR O TIMER
     document.addEventListener('click', handlePause);
     document.addEventListener('touchstart', handlePause);
 
-    // Eventos de teclado
+    // EVENTO DE TECLADO PARA INICIAR O TIMER
     document.addEventListener('keydown', function (e) {
         if (e.code === 'Space') {
             e.preventDefault();
 
-            if (!isRunning && !isInspection) {
-                if (document.getElementById('inspection-time').checked) {
-                    startInspection();
-                } else {
-                    startTimer();
-                }
+            if (!isRunning) {
+                startTimer();
             }
         }
     });
 
-    // Eventos dos modais
+    // EVENTOS DOS MODAIS
     btnHistory.addEventListener('click', function () {
         historyModal.classList.add('active');
     });
@@ -401,7 +371,28 @@ document.addEventListener('DOMContentLoaded', function () {
         settingsModal.classList.remove('active');
     });
 
-    // Inicialização
     updateScramble();
     loadHistory();
+
+    // CONFIGURAÇÕES DO TEMA
+    const themeSelector = document.getElementById('theme-selector');
+
+    themeSelector.addEventListener('change', function () {
+        const theme = this.value;
+        document.getElementById('theme-style').href =
+            theme === 'light'
+                ? 'assets/css/light-theme.css'
+                : 'assets/css/style.css';
+
+        localStorage.setItem('theme', theme);
+    });
+
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        themeSelector.value = savedTheme;
+        document.getElementById('theme-style').href =
+            savedTheme === 'light'
+                ? 'assets/css/light-theme.css'
+                : 'assets/css/style.css';
+    }
 });
