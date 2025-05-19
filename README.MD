@@ -10,7 +10,19 @@
 - 📊 Estatísticas (PB, AO10, últimos tempos)  
 - 🌓 Modos Claro/Escuro  
 - 📸 Exportar histórico como PNG  
-- 📱 Responsivo para mobile/desktop
+- 📱 Responsivo para mobile/desktop  
+
+## 🌐 Acesso Online
+Disponível em: **[https://allvesmatteus.github.io/Crono-CUBE/](https://allvesmatteus.github.io/Crono-CUBE/)**
+
+## 🛠️ Tecnologias Utilizadas
+<div align="center">
+  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5">
+  <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3">
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript">
+  <img src="https://img.shields.io/badge/GitHub%20Pages-222222?style=for-the-badge&logo=githubpages&logoColor=white" alt="GitHub Pages">
+  <img src="https://img.shields.io/badge/Font%20Awesome-528DD7?style=for-the-badge&logo=fontawesome&logoColor=white" alt="Font Awesome">
+</div>
 
 ## 📸 Screenshots & Demonstração
 
